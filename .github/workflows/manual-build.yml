@@ -13,18 +13,15 @@ on:
       javaVersion:
         description: "Java Version"
         required: true
-        default: "11"
-        type: choice
-        options:
-          - "11"
-          - "17"
+        default: "17"
+        type: string
 
 jobs:
   build:
     runs-on: ${{ inputs.os }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Set up JDK ${{ inputs.javaVersion }}
         uses: actions/setup-java@v3
         with:
@@ -38,7 +35,7 @@ jobs:
         if: failure()
         with:
           name: surefire-reports
-          path: '**/surefire-reports/*.txt'
+          path: '**/surefire-reports/'
       - name: Upload server logs
         uses: actions/upload-artifact@v3
         if: failure()

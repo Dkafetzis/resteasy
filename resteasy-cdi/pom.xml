@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-jaxrs-all</artifactId>
-        <version>6.3.0.Alpha1-SNAPSHOT</version>
+        <version>7.0.0.Alpha1-SNAPSHOT</version>
     </parent>
     <artifactId>resteasy-cdi</artifactId>
     <name>RESTEasy CDI integration module</name>
@@ -78,11 +78,6 @@
             <!-- This is a compile time only requirement -->
             <scope>provided</scope>
             <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.jboss.weld</groupId>
-            <artifactId>weld-api</artifactId>
         </dependency>
 
         <!-- Test dependencies -->

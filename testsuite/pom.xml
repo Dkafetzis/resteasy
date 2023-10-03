@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-jaxrs-all</artifactId>
-        <version>6.3.0.Alpha1-SNAPSHOT</version>
+        <version>7.0.0.Alpha1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <name>RESTEasy Main testsuite</name>
@@ -446,7 +446,6 @@
                 </property>
             </activation>
             <properties>
-                <galleon.skip>true</galleon.skip>
                 <wildfly.skip>true</wildfly.skip>
             </properties>
         </profile>

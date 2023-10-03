@@ -9,9 +9,9 @@ on:
     paths-ignore:
       - '.gitignore'
       - ".github/workflows/manual-*.yml"
-      - ".mvn"
-      - "docbook"
-      - "distribution"
+      - ".mvn/**"
+      - "docbook/**"
+      - "distribution/**"
       - "CODEOWNERS"
       - "CODE_OF_CONDUCT.md"
       - "CONTRIBUTING.adoc"
@@ -21,7 +21,7 @@ on:
       - "mvnw.cmd"
       - "README.md"
       - "SECURITY.md"
-      - "*/README.MD"
+      - "**/README.MD"
   schedule:
     - cron: '0 0 * * *' # Every day at 00:00 UTC
 
@@ -44,10 +44,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        java: ['11', '17']
+        java: ['17', '21-ea']
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
         with:
           name: wildfly-maven-repository
@@ -68,7 +68,7 @@ jobs:
         if: failure()
         with:
           name: surefire-reports-${{ matrix.os }}-${{ matrix.java }}
-          path: '**/surefire-reports/*.txt'
+          path: '**/surefire-reports/'
       - name: Upload server logs
         uses: actions/upload-artifact@v3
         if: failure()
@@ -83,13 +83,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: ['11']
+        java: ['17', '21-ea']
         profile:
           - '-Dsecurity.manager'
           - '-Dprovision.preview'
+          - '-am -Pprovision-without-resteasy,without-jackson,skip-awaiting-upgrade-tests -pl testsuite/integration-tests'
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v3
         with:
           name: wildfly-maven-repository
@@ -105,14 +106,12 @@ jobs:
           cache: 'maven'
       - name: Test with ${{ matrix.profile }} - JDK ${{ matrix.java }}
         run:  |
-          echo "::group::Build Logs"
           mvn clean install -U -B -fae ${{ matrix.profile }} '-Dserver.version=${{needs.wildfly-build.outputs.wildfly-version}}'
-          echo "::endgroup::"
       - uses: actions/upload-artifact@v3
         if: failure()
         with:
           name: surefire-reports-${{ matrix.os }}-${{ matrix.java }}-${{ matrix.wildfly-version }}
-          path: '**/surefire-reports/*.txt'
+          path: '**/surefire-reports/'
       - uses: actions/upload-artifact@v3
         if: failure()
         with:

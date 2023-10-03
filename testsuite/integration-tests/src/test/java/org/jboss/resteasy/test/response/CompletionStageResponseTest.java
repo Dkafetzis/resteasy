@@ -10,7 +10,9 @@ import jakarta.ws.rs.core.Response;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.resteasy.category.AwaitingUpgradeInWildFly;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+import org.jboss.resteasy.test.annotations.FollowUpRequired;
 import org.jboss.resteasy.test.response.resource.AsyncResponseCallback;
 import org.jboss.resteasy.test.response.resource.CompletionStageProxy;
 import org.jboss.resteasy.test.response.resource.CompletionStageResponseMessageBodyWriter;
@@ -25,6 +27,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 /**
@@ -88,6 +91,27 @@ public class CompletionStageResponseTest {
 
         // make sure the completion callback was called with no error
         request = client.target(generateURL("/callback-called-no-error?p=text")).request();
+        response = request.get();
+        Assert.assertEquals(200, response.getStatus());
+        response.close();
+    }
+
+    /**
+     * @tpTestDetails Resource method returns CompletableFuture<String>.
+     * @tpSince RESTEasy 6.2
+     */
+    @FollowUpRequired("Remove the category when 6.2.6.Final is merged into WildFly")
+    @Category(AwaitingUpgradeInWildFly.class)
+    @Test
+    public void testCompletableFutureText() throws Exception {
+        Invocation.Builder request = client.target(generateURL("/cftext")).request();
+        Response response = request.get();
+        String entity = response.readEntity(String.class);
+        Assert.assertEquals(200, response.getStatus());
+        Assert.assertEquals(CompletionStageResponseResource.HELLO, entity);
+
+        // make sure the completion callback was called with no error
+        request = client.target(generateURL("/callback-called-no-error?p=cftext")).request();
         response = request.get();
         Assert.assertEquals(200, response.getStatus());
         response.close();

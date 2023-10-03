@@ -14,18 +14,24 @@
 
     <groupId>org.jboss.resteasy</groupId>
     <artifactId>resteasy-jaxrs-all</artifactId>
-    <version>6.3.0.Alpha1-SNAPSHOT</version>
+    <version>7.0.0.Alpha1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Require a minimum of Java 17 and make Java 17 the target -->
+        <jdk.min.version>17</jdk.min.version>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+
         <!-- Dependency versions -->
-        <dep.arquillian-bom.version>1.7.0.Final</dep.arquillian-bom.version>
+        <dep.arquillian-bom.version>1.7.1.Final</dep.arquillian-bom.version>
         <version.org.jboss.arquillian.container.arquillian-weld-embedded>3.0.2.Final</version.org.jboss.arquillian.container.arquillian-weld-embedded>
-        <server.version>28.0.1.Final</server.version>
+        <server.version>29.0.0.Final</server.version>
         <version.org.wildfly>${server.version}</version.org.wildfly>
-        <version.org.wildfly.arquillian.wildfly-arquillian>5.0.0.Alpha6</version.org.wildfly.arquillian.wildfly-arquillian>
+        <version.org.wildfly.arquillian.wildfly-arquillian>5.0.1.Final</version.org.wildfly.arquillian.wildfly-arquillian>
 
         <jboss.home/>
         <!-- print logs to file by default -->
@@ -40,18 +46,15 @@
         <skipTests>${maven.test.skip}</skipTests>
         <wildfly.skip>${skipTests}</wildfly.skip>
 
-        <!-- Galleon -->
+        <!-- Provisioning settings -->
         <galleon.fork.embedded>true</galleon.fork.embedded>
-        <galleon.log.time>true</galleon.log.time>
         <galleon.offline>false</galleon.offline>
-        <galleon.skip>${skipTests}</galleon.skip>
 
         <!-- Plugins versions -->
         <version.javadoc.plugin>3.3.1</version.javadoc.plugin>
         <version.org.jacoco.plugin>0.8.10</version.org.jacoco.plugin>
-        <version.org.jboss.galleon>5.1.0.Final</version.org.jboss.galleon>
-        <version.org.wildfly.galleon-plugins>6.4.2.Final</version.org.wildfly.galleon-plugins>
-        <version.org.wildfly.plugins.wildfly-maven-plugin>4.0.0.Final</version.org.wildfly.plugins.wildfly-maven-plugin>
+        <version.org.wildfly.galleon-plugins>6.4.3.Final</version.org.wildfly.galleon-plugins>
+        <version.org.wildfly.plugins.wildfly-maven-plugin>4.2.0.Final</version.org.wildfly.plugins.wildfly-maven-plugin>
 
         <!-- Test options -->
         <additionalJvmArgs>-Djava.io.tmpdir=${project.build.directory}</additionalJvmArgs>
@@ -364,11 +367,6 @@
                     <version>${version.org.jacoco.plugin}</version>
                 </plugin>
 
-                <plugin>
-                    <groupId>org.jboss.galleon</groupId>
-                    <artifactId>galleon-maven-plugin</artifactId>
-                    <version>${version.org.jboss.galleon}</version>
-                </plugin>
                 <plugin>
                     <groupId>org.wildfly.galleon-plugins</groupId>
                     <artifactId>wildfly-galleon-maven-plugin</artifactId>
