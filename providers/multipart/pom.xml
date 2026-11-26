@@ -84,6 +84,15 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+        <!--
+            Needed by MultipartAsyncEngineTest: with no ClientHttpEngineFactory service on the class path,
+            ResteasyClientBuilder.useAsyncHttpEngine() falls back to the Apache async engine.
+        -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpasyncclient</artifactId>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>

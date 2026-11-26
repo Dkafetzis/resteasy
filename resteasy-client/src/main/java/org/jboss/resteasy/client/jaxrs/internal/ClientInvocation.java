@@ -384,7 +384,7 @@ public class ClientInvocation implements Invocation {
                 headers.getMediaType(), headers.getHeaders(), outputStream, getMutableProperties(), tracingLogger);
 
         final long timestamp = tracingLogger.timestamp("WI_SUMMARY");
-        try {
+        try (CloseableContext providersContext = pushProvidersContext()) {
             ctx.proceed();
         } finally {
             tracingLogger.logDuration("WI_SUMMARY", timestamp,
@@ -697,8 +697,11 @@ public class ClientInvocation implements Invocation {
                     if (aborted != null) {
                         return CompletableFuture.completedFuture(aborted);
                     }
-                    final ResultExtractor<T> wrapped = (response) -> extractor
-                            .extractResult(filterResponse(requestContext, response));
+                    final ResultExtractor<T> wrapped = (response) -> {
+                        try (CloseableContext ctx = pushProvidersContext()) {
+                            return extractor.extractResult(filterResponse(requestContext, response));
+                        }
+                    };
                     return ((AsyncClientHttpEngine) client.httpEngine()).submit(ClientInvocation.this, buffered, wrapped);
                 });
     }
